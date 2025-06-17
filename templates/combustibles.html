@@ -1,0 +1,558 @@
+{% extends 'base.html' %}
+
+{% block title %}Control de Combustibles{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/combustibles.css">
+<style>
+    /* Estilos para el encabezado y búsqueda */
+    .combustibles-container {
+        padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+        max-width: 1800px;
+        margin: 0;
+        width: 100%;
+    }
+
+    .combustibles-header {
+        margin-bottom: 1rem;
+        background: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-container {
+        max-width: 400px;
+        margin-top: 0.5rem;
+    }
+
+    .search-box {
+        position: relative;
+        width: 100%;
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+
+    #buscadorUnidades {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+    }
+
+    #buscadorUnidades:focus {
+        outline: none;
+        border-color: #4361ee;
+        box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+        background-color: #fff;
+    }
+
+    .btn-volver {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #4361ee;
+        text-decoration: none;
+        margin: 0.5rem 0 1rem 0;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-volver:hover {
+        color: #304ffe;
+        transform: translateX(-3px);
+    }
+
+    .btn-agregar {
+        background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        color: white;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-agregar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-info {
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        color: #495057;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-info:hover {
+        background: #e9ecef;
+        color: #212529;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="combustibles-container" style="margin: 0; padding: 1.5rem 1.5rem 2rem 1.5rem; max-width: 100%;">
+    <a href="{{ url_for('index') }}" class="btn-volver">
+        <i class="fas fa-arrow-left"></i> Volver al inicio
+    </a>
+    
+    <div class="combustibles-header" style="margin-left: 0;">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h1 class="mb-0"><i class="fas fa-gas-pump me-2"></i>Control de Combustibles</h1>
+                <p class="text-muted mb-0 mt-2">Gestión y seguimiento de consumos de combustible</p>
+            </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="buscadorUnidades" class="form-control" placeholder="Buscar unidad...">
+                </div>
+            </div>
+        </div>
+
+    <div class="table-responsive mt-4" style="margin: 0; padding: 0; width: 100%;">
+        <table class="table table-hover align-middle" style="margin: 0; width: 100%; table-layout: fixed; max-width: 100%;">
+            <colgroup>
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+            </colgroup>
+            <thead class="table-light">
+                <tr>
+                    <th class="text-start" style="padding-left: 1rem !important;">Unidad</th>
+                    <th class="text-start">Último Registro</th>
+                    <th class="text-start">Total</th>
+                    <th class="text-start">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for unidad in unidades %}
+                <tr class="unidad-row">
+                    <td class="fw-medium ps-3">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold">{{ unidad.serie }}</span>
+                            <small class="text-muted">{{ unidad.marca }} - {{ unidad.tipo }}</small>
+                        </div>
+                    </td>
+                    <td class="text-start" style="padding-left: 1rem !important;">
+                        {% if unidad.ultima_fecha %}
+                            <div class="d-flex flex-column">
+                                <span class="badge bg-light text-dark mb-1">
+                                    <i class="far fa-calendar-alt me-1"></i>
+                                    {{ unidad.ultima_fecha.strftime('%d/%m/%Y') }}
+                                </span>
+                                <small class="text-muted">
+                                    {{ unidad.ultimos_litros|default(0)|number_format(2, ',', '.') }} L
+                                    {% if unidad.ultimo_precio %}
+                                        @ {{ unidad.ultimo_precio|number_format(2, ',', '.') }} c/u
+                                    {% endif %}
+                                </small>
+                            </div>
+                        {% else %}
+                            <span class="text-muted">Sin registros</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-start" style="padding-left: 1rem !important;">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold">
+                                ${{ unidad.total_general_importe|default(0)|number_format(2, ',', '.') }}
+                            </span>
+                            <small class="text-muted">
+                                {{ unidad.total_general_litros|default(0)|number_format(2, ',', '.') }} L totales
+                            </small>
+                        </div>
+                    </td>
+                    <td class="text-start" style="padding-left: 1rem !important;">
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-agregar me-2 cargar-combustible" 
+                                    data-unidad='{{ {"id": unidad.id, "serie": unidad.serie, "kilometraje": unidad.kilometraje|default(0)}|tojson|safe }}'
+                                    style="white-space: nowrap;">
+                                <i class="fas fa-plus-circle me-1"></i> Cargar
+                            </button>
+                            <a href="/combustible/{{ unidad.id }}" class="btn btn-sm btn-info"
+                               style="white-space: nowrap;">
+                                <i class="fas fa-history me-1"></i> Historial
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para agregar combustible -->
+<div id="modalAgregarCombustible" class="modal" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; overflow-y: auto;">
+    <div class="modal-contenido" style="background: white; border-radius: 12px; width: 100%; max-width: 500px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); transform: translateY(-20px); transition: all 0.3s ease-out;">
+        <!-- Encabezado del modal -->
+        <div class="modal-header" style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; justify-content: space-between;">
+            <h2 class="mb-0 modal-title" style="font-size: 1.25rem; font-weight: 600; color: #212529; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-gas-pump me-1" style="color: #4361ee;"></i>
+                <span>Registrar Carga de Combustible</span>
+            </h2>
+            <button type="button" id="cerrarModal" style="background: none; border: none; font-size: 1.5rem; color: #6c757d; cursor: pointer; opacity: 0.7; transition: opacity 0.2s ease; line-height: 1;">
+                &times;
+            </button>
+        </div>
+        
+        <!-- Cuerpo del formulario -->
+        <form id="formCombustible" style="padding: 1.5rem;">
+            <input type="hidden" id="unidadId" name="unidad_id">
+            
+            <!-- Grupo de Fecha y Hora -->
+            <div class="mb-4">
+                <label for="fecha" class="form-label" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #495057;">
+                    <i class="far fa-calendar-alt me-2" style="color: #6c757d;"></i>Fecha y Hora
+                </label>
+                <input type="datetime-local" class="form-control" id="fecha" name="fecha" required 
+                       style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #dee2e6; border-radius: 8px; font-size: 0.95rem; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;">
+            </div>
+            
+            <!-- Grupo de Litros -->
+            <div class="mb-4">
+                <label for="litros" class="form-label" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #495057;">
+                    <i class="fas fa-tint me-2" style="color: #4361ee;"></i>Litros
+                </label>
+                <div style="display: flex; position: relative;">
+                    <input type="number" step="0.01" class="form-control" id="litros" name="litros" required
+                           placeholder="Ej: 45.50"
+                           style="padding: 0.75rem 1rem; border-radius: 8px 0 0 8px; border: 1px solid #dee2e6; border-right: none; width: 100%; font-size: 0.95rem;">
+                    <span style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-left: none; color: #6c757d; display: flex; align-items: center; padding: 0 1rem; border-radius: 0 8px 8px 0; font-size: 0.95rem;">
+                        L
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Grupo de Kilometraje -->
+            <div class="mb-4">
+                <label for="kilometraje" class="form-label" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #495057;">
+                    <i class="fas fa-tachometer-alt me-2" style="color: #6c757d;"></i>Kilometraje Actual
+                </label>
+                <div style="display: flex; position: relative;">
+                    <input type="number" class="form-control" id="kilometraje" name="kilometraje" required
+                           placeholder="Ej: 12500"
+                           style="padding: 0.75rem 1rem; border-radius: 8px 0 0 8px; border: 1px solid #dee2e6; border-right: none; width: 100%; font-size: 0.95rem;">
+                    <span style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-left: none; color: #6c757d; display: flex; align-items: center; padding: 0 1rem; border-radius: 0 8px 8px 0; font-size: 0.95rem;">
+                        km
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Grupo de Precio por Litro -->
+            <div class="mb-4">
+                <label for="precio" class="form-label" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #495057;">
+                    <i class="fas fa-tag me-2" style="color: #20c997;"></i>Precio por Litro
+                </label>
+                <div style="display: flex; position: relative;">
+                    <span style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-right: none; color: #6c757d; display: flex; align-items: center; padding: 0 1rem; border-radius: 8px 0 0 8px; font-size: 0.95rem;">
+                        $
+                    </span>
+                    <input type="number" step="0.01" class="form-control" id="precio" name="precio" required
+                           placeholder="Ej: 25.50"
+                           style="padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; border: 1px solid #dee2e6; width: 100%; font-size: 0.95rem;">
+                </div>
+            </div>
+            
+            <!-- Grupo de Comentarios -->
+            <div class="mb-4">
+                <label for="comentarios" class="form-label" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #495057;">
+                    <i class="far fa-comment-dots me-2" style="color: #6c757d;"></i>Comentarios (opcional)
+                </label>
+                <textarea class="form-control" id="comentarios" name="comentarios" rows="3"
+                          placeholder="Agregue cualquier observación sobre esta carga"
+                          style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #dee2e6; border-radius: 8px; resize: vertical; min-height: 100px; font-size: 0.95rem;"></textarea>
+            </div>
+            
+            <!-- Pie del modal con botones -->
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+                <button type="button" id="cancelar" 
+                        style="padding: 0.65rem 1.5rem; border-radius: 8px; font-weight: 500; background: #f8f9fa; border: 1px solid #dee2e6; color: #495057; cursor: pointer; transition: all 0.2s ease;">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="submit" 
+                        style="padding: 0.65rem 1.5rem; border-radius: 8px; font-weight: 500; background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%); color: white; border: none; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <i class="fas fa-save"></i>
+                    <span>Guardar Carga</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Función para abrir el modal con animación
+    function abrirModal(unidad) {
+        console.log('Abriendo modal para unidad:', unidad);
+        const modal = document.getElementById('modalAgregarCombustible');
+        if (!modal) {
+            console.error('No se encontró el modal');
+            alert('Error: No se pudo abrir el formulario. Intente recargar la página.');
+            return;
+        }
+
+        // Mostrar el modal primero
+        modal.style.display = 'flex';
+        
+        // Obtener referencias a los elementos del formulario
+        const modalContent = modal.querySelector('.modal-contenido');
+        const unidadIdInput = document.getElementById('unidadId');
+        const tituloModal = modal.querySelector('.modal-title');
+        const fechaInput = document.getElementById('fecha');
+        const kilometrajeInput = document.getElementById('kilometraje');
+        const litrosInput = document.getElementById('litros');
+        const precioInput = document.getElementById('precio');
+        const comentariosInput = document.getElementById('comentarios');
+        
+        // Validar que todos los elementos necesarios existan
+        const elementosRequeridos = {
+            'modalContent': modalContent,
+            'unidadIdInput': unidadIdInput,
+            'tituloModal': tituloModal,
+            'fechaInput': fechaInput,
+            'kilometrajeInput': kilometrajeInput,
+            'litrosInput': litrosInput,
+            'precioInput': precioInput,
+            'comentariosInput': comentariosInput
+        };
+        
+        const elementosFaltantes = Object.entries(elementosRequeridos)
+            .filter(([_, element]) => !element)
+            .map(([name, _]) => name);
+            
+        if (elementosFaltantes.length > 0) {
+            console.error('Elementos faltantes en el formulario:', elementosFaltantes);
+            console.log('Estado del DOM:', {
+                modalDisplay: window.getComputedStyle(modal).display,
+                modalContent: modalContent ? 'Encontrado' : 'No encontrado',
+                tituloModal: tituloModal ? tituloModal.textContent : 'No encontrado'
+            });
+            alert('Error: Algunos elementos del formulario no se pudieron cargar. Por favor, recarga la página.');
+            modal.style.display = 'none';
+            return;
+        }
+        
+        try {
+            // Configurar el ID de la unidad
+            unidadIdInput.value = unidad.id;
+            
+            // Actualizar el título del modal con el número de serie de la unidad
+            tituloModal.textContent = `Cargar Combustible - ${unidad.serie || 'Unidad'}`;
+            
+            // Establecer la fecha y hora actual por defecto
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            fechaInput.value = localDateTime;
+            
+            // Establecer el kilometraje actual como valor por defecto
+            if (unidad.kilometraje) {
+                kilometrajeInput.value = unidad.kilometraje.toString().replace(/\./g, '');
+            } else {
+                kilometrajeInput.value = '';
+            }
+            
+            // Limpiar otros campos
+            litrosInput.value = '';
+            precioInput.value = '';
+            comentariosInput.value = '';
+            
+            // Mostrar el modal con animación
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevenir scroll del fondo
+            
+            // Forzar reflow para que la animación funcione
+            void modal.offsetHeight;
+            
+            // Aplicar estilos para la animación
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                if (modalContent) {
+                    modalContent.style.transform = 'translateY(0)';
+                    modalContent.style.opacity = '1';
+                }
+            }, 10);
+            
+            // Enfocar el primer campo
+            setTimeout(() => {
+                if (litrosInput) litrosInput.focus();
+            }, 50);
+            
+        } catch (error) {
+            console.error('Error al abrir el modal:', error);
+            alert('Ocurrió un error al abrir el formulario. Por favor, inténtalo de nuevo.');
+        }
+    }
+    
+    // Función para cerrar el modal con animación
+    function cerrarModal() {
+        console.log('Cerrando modal');
+        const modal = document.getElementById('modalAgregarCombustible');
+        const modalContent = modal.querySelector('.modal-contenido');
+        
+        modal.style.opacity = '0';
+        if (modalContent) {
+            modalContent.style.transform = 'translateY(-20px)';
+            modalContent.style.opacity = '0';
+        }
+        
+        // Restaurar el scroll del fondo
+        document.body.style.overflow = 'auto';
+        
+        // Ocultar el modal después de la animación
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+    // Asegurarse de que el DOM esté completamente cargado
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM cargado, inicializando eventos...');
+        // Manejar clic en botones de cargar combustible
+        const cargarBotones = document.querySelectorAll('.cargar-combustible');
+        console.log('Botones de cargar encontrados:', cargarBotones.length);
+        
+        cargarBotones.forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('Botón de cargar clickeado');
+                try {
+                    const unidadData = JSON.parse(this.getAttribute('data-unidad'));
+                    console.log('Datos de la unidad:', unidadData);
+                    abrirModal(unidadData);
+                } catch (error) {
+                    console.error('Error al analizar datos de la unidad:', error);
+                    console.error('Atributo data-unidad:', this.getAttribute('data-unidad'));
+                    alert('Error al cargar los datos de la unidad: ' + error.message);
+                }
+            });
+        });
+
+        // Cerrar modal al hacer clic en la X
+        const cerrarBtn = document.getElementById('cerrarModal');
+        if (cerrarBtn) {
+            cerrarBtn.addEventListener('click', cerrarModal);
+        }
+
+        // Cerrar modal al hacer clic en Cancelar
+        const cancelarBtn = document.getElementById('cancelar');
+        if (cancelarBtn) {
+            cancelarBtn.addEventListener('click', cerrarModal);
+        }
+
+        // Cerrar modal al hacer clic fuera del contenido
+        const modal = document.getElementById('modalAgregarCombustible');
+        if (modal) {
+            modal.addEventListener('click', function(event) {
+                if (event.target === this) {
+                    cerrarModal();
+                }
+            });
+        }
+        
+        // Cerrar con tecla ESC
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('modalAgregarCombustible');
+            if (modal && event.key === 'Escape' && window.getComputedStyle(modal).display === 'flex') {
+                cerrarModal();
+            }
+        });
+
+        // Calcular automáticamente el total cuando cambie el precio o los litros
+        const litrosInput = document.getElementById('litros');
+        const precioInput = document.getElementById('precio');
+        
+        function calcularTotal() {
+            const litros = parseFloat(litrosInput.value) || 0;
+            const precio = parseFloat(precioInput.value) || 0;
+            const total = litros * precio;
+            // Aquí puedes mostrar el total si lo deseas
+        }
+        
+        if (litrosInput && precioInput) {
+            litrosInput.addEventListener('input', calcularTotal);
+            precioInput.addEventListener('input', calcularTotal);
+        }
+    });
+
+    // Manejar el envío del formulario
+    document.getElementById('formCombustible').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Mostrar indicador de carga
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        
+        try {
+            // Simular envío al servidor (reemplazar con llamada real)
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Cerrar el modal
+            cerrarModal();
+            
+            // Mostrar mensaje de éxito
+            await Swal.fire({
+                title: '¡Éxito!',
+                text: 'El registro de combustible ha sido guardado correctamente.',
+                icon: 'success',
+                confirmButtonColor: '#4361ee',
+                confirmButtonText: 'Aceptar'
+            });
+            
+            // Recargar la página o actualizar la tabla (dependiendo de tu implementación)
+            // window.location.reload();
+            
+        } catch (error) {
+            console.error('Error al guardar el registro:', error);
+            await Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error al guardar el registro. Por favor, inténtalo de nuevo.',
+                icon: 'error',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'Entendido'
+            });
+        } finally {
+            // Restaurar el botón
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
+        }
+    });
+
+    // Agregar evento de búsqueda
+    document.getElementById('buscadorUnidades').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            const unidadText = row.cells[0].textContent.toLowerCase();
+            if (unidadText.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

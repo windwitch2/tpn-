@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Unidad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+    <header>
+        <h1>Registrar Nueva Unidad</h1>
+        <nav>
+            <a href="/">← Volver al inicio</a>
+        </nav>
+    </header>
+
+    <section>
+        <form method="POST" action="/agregar_unidad">
+            <label for="serie">Serie:</label>
+            <input type="text" id="serie" name="serie" required>
+
+            <label for="modelo">Modelo:</label>
+            <input type="text" id="modelo" name="modelo" required>
+
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca" required>
+
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" rows="3"></textarea>
+
+            <label for="numero_economico">Número Económico:</label>
+            <input type="text" id="numero_economico" name="numero_economico" required>
+
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo">
+                <option value="">-- Selecciona --</option>
+                <option value="Camión">Camión</option>
+                <option value="Maquinaria">Maquinaria</option>
+                <option value="Otro">Otro</option>
+            </select>
+
+            <br><br>
+            <button type="submit">Guardar Unidad</button>
+        </form>
+    </section>
+
+    <script src="/static/js/index.js"></script>
+</body>
+</html>

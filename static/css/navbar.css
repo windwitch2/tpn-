@@ -1,0 +1,306 @@
+/* ===== Sidebar Navigation ===== */
+:root {
+    --sidebar-width: 5rem;
+    --sidebar-expanded-width: 16rem;
+    --primary: #4f46e5;
+    --radius: 0.5rem;
+    --sidebar-padding: 1.5rem 0;
+    --nav-item-spacing: 0.5rem;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: #1e293b;
+    color: white;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    padding: var(--sidebar-padding);
+    display: flex;
+    flex-direction: column;
+    width: var(--sidebar-width);
+    padding-left: 0;
+    margin: 0;
+}
+
+/* Sidebar Hover State */
+.sidebar:hover {
+    width: var(--sidebar-expanded-width);
+    padding-left: 1rem;
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar:hover .nav-text {
+    opacity: 1;
+    transition-delay: 0.1s;
+}
+
+.sidebar:hover .sidebar-header {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0.1s;
+}
+
+.sidebar:hover .sidebar-divider {
+    opacity: 1;
+}
+
+/* Scrollbar Styling */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+/* Navigation List */
+.sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-header {
+    padding: 0 1rem 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.sidebar:hover .sidebar-header {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0.1s;
+}
+
+.sidebar-logo {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.sidebar-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Navigation Items */
+.sidebar-nav {
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: 1rem;
+}
+
+.sidebar-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nav-item-spacing);
+    flex: 1;
+    padding: 0 0.5rem;
+}
+
+.sidebar ul li {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 0;
+}
+
+.sidebar ul li.mt-auto {
+    margin-top: auto;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    padding: 0.75rem 0.5rem 0.75rem 1rem;
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+    position: relative;
+    white-space: nowrap;
+    width: calc(var(--sidebar-expanded-width) - 1rem);
+}
+
+.sidebar ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.sidebar ul li.active a {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+}
+
+/* Hover & Active States */
+.sidebar ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateX(4px);
+}
+
+.sidebar ul li.active a {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+}
+
+/* Icons */
+.nav-icon {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+    font-size: 1.25rem;
+}
+
+.sidebar ul li a:hover .nav-icon {
+    transform: scale(1.1);
+}
+
+/* Text Labels */
+.nav-text {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 0.5rem;
+}
+
+.sidebar:hover .nav-text {
+    opacity: 1;
+    transition-delay: 0.1s;
+}
+
+/* Badges & Indicators */
+.sidebar-badge {
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.sidebar ul li.active .sidebar-badge {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Divider */
+.sidebar-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0.75rem 1rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.sidebar:hover .sidebar-divider {
+    opacity: 1;
+}
+
+/* Main content positioning */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 0;
+    transition: all 0.3s ease;
+    min-height: 100vh;
+    width: calc(100% - var(--sidebar-width));
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    background-color: #f5f7fa;
+    display: flex;
+    justify-content: center;
+}
+
+/* Content wrapper */
+.content-wrapper {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0;
+    padding: 0 2rem;
+    box-sizing: border-box;
+}
+
+/* Container adjustments */
+.container {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Ensure full width for sections */
+section {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Text and icons */
+.nav-text {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+    display: inline-block;
+    width: calc(var(--sidebar-expanded-width) - var(--sidebar-width) - 1rem);
+}
+
+.sidebar:hover .nav-text {
+    opacity: 1;
+    transition-delay: 0.1s;
+}
+
+.sidebar:hover .sidebar-header {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0.1s;
+}
+
+.sidebar:hover .sidebar-divider {
+    opacity: 1;
+}

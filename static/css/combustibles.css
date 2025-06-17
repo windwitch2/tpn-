@@ -1,0 +1,247 @@
+/* ===== Fuel Management Styles ===== */
+:root {
+    --success-light: #d1fae5;
+    --warning-light: #fef3c7;
+    --danger-light: #fee2e2;
+    --info-light: #dbeafe;
+    --success-dark: #065f46;
+    --warning-dark: #92400e;
+    --danger-dark: #b91c1c;
+    --info-dark: #1e40af;
+}
+
+/* Main Container */
+.main-content {
+    max-width: 1440px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-title svg {
+    width: 1.75rem;
+    height: 1.75rem;
+    stroke: currentColor;
+    stroke-width: 1.5;
+}
+
+/* Table Container */
+.table-responsive {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    margin-bottom: 2rem;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.9375rem;
+}
+
+th, td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: middle;
+}
+
+th {
+    background-color: var(--gray-50);
+    color: var(--gray-700);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background-color: var(--gray-50);
+}
+
+/* Action Buttons */
+.acciones-btn {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+}
+
+.btn-accion {
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: var(--transition);
+    background: transparent;
+    color: var(--gray-600);
+}
+
+.btn-accion:hover {
+    background: var(--gray-100);
+    color: var(--gray-900);
+}
+
+.btn-accion svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.btn-editar {
+    color: var(--info);
+    border-color: var(--gray-200);
+}
+
+.btn-editar:hover {
+    background: var(--info-light);
+    color: var(--info-dark);
+    border-color: var(--info-light);
+}
+
+.btn-eliminar {
+    color: var(--danger);
+    border-color: var(--gray-200);
+}
+
+.btn-eliminar:hover {
+    background: var(--danger-light);
+    color: var(--danger-dark);
+    border-color: var(--danger-light);
+}
+
+/* Back Button */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 500;
+    transition: var(--transition);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    background: white;
+}
+
+.btn-volver:hover {
+    background: var(--gray-50);
+    color: var(--primary-hover);
+    text-decoration: none;
+    transform: translateX(-2px);
+}
+
+.btn-volver svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke: currentColor;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .main-content {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+        margin: 1rem;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .table-responsive {
+        border-radius: 0;
+        margin: 0 -1rem;
+        width: calc(100% + 2rem);
+    }
+    
+    th, td {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .btn-volver {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .main-content {
+        padding: 0;
+        box-shadow: none;
+        border: none;
+    }
+    
+    .table-responsive {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    table {
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+    
+    th, td {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+    }
+    
+    .acciones-btn {
+        display: none;
+    }
+}

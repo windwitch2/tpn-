@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}IFrame{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>Contenido en IFrame</h1>
+    </div>
+    
+    <div class="content">
+        <div class="iframe-container">
+            <iframe src="about:blank" frameborder="0" style="width: 100%; height: 80vh; border: 1px solid #ddd;"></iframe>
+        </div>
+    </div>
+</div>
+
+<style>
+.iframe-container {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
