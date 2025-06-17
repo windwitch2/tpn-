@@ -64,9 +64,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for mantenimiento in mantenimientos %}
-                <tr>
-                    <td>{{ mantenimiento.unidad.serie }}</td>
+                {% if mantenimientos and mantenimientos|length > 0 %}
+                    {% for mantenimiento in mantenimientos %}
+                    <tr>
+                        <td>{{ mantenimiento.unidad.serie }}</td>
                     <td>
                         <span class="badge tipo-{{ mantenimiento.tipo }}">
                             {{ mantenimiento.tipo|capitalize }}
@@ -92,40 +93,65 @@
                         </button>
                     </td>
                 </tr>
-                {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">No hay mantenimientos registrados que coincidan con los filtros seleccionados.</td>
+                    </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
     
     <!-- Paginación -->
     <nav aria-label="Paginación de mantenimientos" class="mt-4">
+        {% if pagination and pagination.total_pages > 1 %}
         <ul class="pagination justify-content-center">
+            {# Botón Anterior #}
             {% if pagination.has_prev %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ pagination.prev_num }}" aria-label="Anterior">
+                <a class="page-link" href="{{ url_for('ver_mantenimientos', page=pagination.prev_num, **request_args) }}" aria-label="Anterior">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&laquo;</span>
+            </li>
             {% endif %}
             
-            {% for page in pagination.iter_pages() %}
-                {% if page %}
-                    <li class="page-item {% if page == pagination.page %}active{% endif %}">
-                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+            {# Números de Página #}
+            {% for page_num in pagination.iter_pages %}
+                {% if page_num %}
+                    {% if page_num == pagination.page %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ page_num }}</span>
                     </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('ver_mantenimientos', page=page_num, **request_args) }}">{{ page_num }}</a>
+                    </li>
+                    {% endif %}
                 {% else %}
+                    {# Esto es para elipsis, si tu iter_pages lo soporta con None #}
                     <li class="page-item disabled"><span class="page-link">...</span></li>
                 {% endif %}
             {% endfor %}
             
+            {# Botón Siguiente #}
             {% if pagination.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ pagination.next_num }}" aria-label="Siguiente">
+                <a class="page-link" href="{{ url_for('ver_mantenimientos', page=pagination.next_num, **request_args) }}" aria-label="Siguiente">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&raquo;</span>
+            </li>
             {% endif %}
         </ul>
+        {% endif %}
     </nav>
 </div>
 
@@ -244,172 +270,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    // Configuración inicial
-    document.addEventListener('DOMContentLoaded', function() {
-        // Establecer la fecha actual por defecto
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('fecha').value = today;
-        
-        // Inicializar tooltips
-        $('[data-toggle="tooltip"]').tooltip();
-        
-        // Configurar filtros
-        configurarFiltros();
-        
-        // Configurar eventos de los botones
-        configurarEventos();
-    });
-    
-    // Función para configurar los eventos de los botones
-    function configurarEventos() {
-        // Botón para abrir el modal de nuevo mantenimiento
-        document.getElementById('btnAgregarMantenimiento').addEventListener('click', function() {
-            abrirModal();
-        });
-        
-        // Botón para cerrar el modal
-        document.getElementById('cerrarModal').addEventListener('click', function() {
-            document.getElementById('modalMantenimiento').style.display = 'none';
-        });
-        
-        // Botón para cancelar en el modal
-        document.getElementById('btnCancelar').addEventListener('click', function() {
-            document.getElementById('modalMantenimiento').style.display = 'none';
-        });
-        
-        // Cerrar modal al hacer clic fuera del contenido
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('modalMantenimiento');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-        
-        // Configurar eventos para los botones de acción en la tabla
-        document.querySelectorAll('.btn-ver').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                verMantenimiento(id);
-            });
-        });
-        
-        document.querySelectorAll('.btn-editar').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                editarMantenimiento(id);
-            });
-        });
-        
-        document.querySelectorAll('.btn-eliminar').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                confirmarEliminar(id);
-            });
-        });
-    }
-    
-    // Función para abrir el modal en modo nuevo o edición
-    function abrirModal(mantenimiento = null) {
-        const form = document.getElementById('formMantenimiento');
-        const modalTitulo = document.getElementById('modalTitulo');
-        
-        // Limpiar el formulario
-        form.reset();
-        
-        if (mantenimiento) {
-            // Modo edición
-            modalTitulo.textContent = 'Editar Mantenimiento';
-            document.getElementById('mantenimientoId').value = mantenimiento.id;
-            document.getElementById('unidad').value = mantenimiento.unidad_id;
-            document.getElementById('tipo').value = mantenimiento.tipo;
-            document.getElementById('fecha').value = mantenimiento.fecha;
-            document.getElementById('kilometraje').value = mantenimiento.kilometraje;
-            document.getElementById('proximo').value = mantenimiento.proximo_kilometraje || '';
-            document.getElementById('descripcion').value = mantenimiento.descripcion;
-            document.getElementById('proveedor').value = mantenimiento.proveedor || '';
-            document.getElementById('costo').value = mantenimiento.costo || '';
-            document.getElementById('observaciones').value = mantenimiento.observaciones || '';
-            document.getElementById('completado').checked = mantenimiento.completado || false;
-        } else {
-            // Modo nuevo
-            modalTitulo.textContent = 'Nuevo Mantenimiento';
-            document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
-        }
-        
-        // Mostrar el modal
-        document.getElementById('modalMantenimiento').style.display = 'flex';
-    }
-    
-    // Función para ver los detalles de un mantenimiento
-    function verMantenimiento(id) {
-        // Aquí iría la lógica para cargar los datos del mantenimiento
-        // Por ahora, solo mostramos un mensaje
-        alert(`Ver mantenimiento con ID: ${id}`);
-    }
-    
-    // Función para editar un mantenimiento existente
-    function editarMantenimiento(id) {
-        // Aquí iría la lógica para cargar los datos del mantenimiento
-        // Por ahora, solo mostramos un mensaje
-        alert(`Editar mantenimiento con ID: ${id}`);
-    }
-    
-    // Función para confirmar la eliminación de un mantenimiento
-    function confirmarEliminar(id) {
-        if (confirm('¿Está seguro de que desea eliminar este registro de mantenimiento?')) {
-            // Aquí iría la lógica para eliminar el mantenimiento
-            alert(`Eliminar mantenimiento con ID: ${id}`);
-        }
-    }
-    
-    // Función para configurar los filtros
-    function configurarFiltros() {
-        // Configurar el botón de limpiar
-        document.getElementById('btnLimpiar').addEventListener('click', function() {
-            document.getElementById('filtroUnidad').value = '';
-            document.getElementById('filtroTipo').value = '';
-            document.getElementById('filtroFechaDesde').value = '';
-            document.getElementById('filtroFechaHasta').value = '';
-            
-            // Aquí iría la lógica para recargar la tabla sin filtros
-            console.log('Filtros limpiados');
-        });
-        
-        // Configurar el botón de filtrar
-        document.getElementById('btnFiltrar').addEventListener('click', function() {
-            const unidad = document.getElementById('filtroUnidad').value;
-            const tipo = document.getElementById('filtroTipo').value;
-            const fechaDesde = document.getElementById('filtroFechaDesde').value;
-            const fechaHasta = document.getElementById('filtroFechaHasta').value;
-            
-            // Aquí iría la lógica para aplicar los filtros
-            console.log('Aplicando filtros:', { unidad, tipo, fechaDesde, fechaHasta });
-        });
-    }
-    
-    // Manejar el envío del formulario
-    document.getElementById('formMantenimiento').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Aquí iría la lógica para guardar los datos
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData.entries());
-        console.log('Datos del formulario:', data);
-        
-        // Mostrar mensaje de éxito
-        Swal.fire({
-            title: '¡Éxito!',
-            text: 'El mantenimiento ha sido guardado correctamente.',
-            icon: 'success',
-            confirmButtonText: 'Aceptar'
-        }).then(() => {
-            // Cerrar el modal
-            document.getElementById('modalMantenimiento').style.display = 'none';
-            
-            // Recargar la página o actualizar la tabla
-            // window.location.reload();
-        });
-    });
-</script>
+<script src="{{ url_for('static', filename='js/mantenimientos.js') }}"></script>
 {% endblock %}
