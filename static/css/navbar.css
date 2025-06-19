@@ -1,9 +1,10 @@
 /* ===== Sidebar Navigation ===== */
+/* Local variables specific to sidebar, can override global if needed, or use global ones */
 :root {
     --sidebar-width: 5rem;
     --sidebar-expanded-width: 16rem;
-    --primary: #4f46e5;
-    --radius: 0.5rem;
+    /* --primary: #4f46e5; */ /* Commented out, use global var(--primary) */
+    --radius: 0.5rem; /* This could be var(--radius) from index.css if they are same value */
     --sidebar-padding: 1.5rem 0;
     --nav-item-spacing: 0.5rem;
 }
@@ -13,9 +14,9 @@
     top: 0;
     left: 0;
     height: 100vh;
-    background: #1e293b;
-    color: white;
-    transition: all 0.3s ease;
+    background: var(--sidebar-bg, #1e293b); /* Use global var, with fallback */
+    color: white; /* Standard text color on dark bg */
+    transition: all 0.3s ease; /* var(--transition) could be used if timing is same */
     z-index: 1000;
     overflow-x: hidden;
     overflow-y: auto;
@@ -93,7 +94,7 @@
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
-    background: var(--primary);
+    background: var(--primary); /* Uses global --primary via cascade or local if redefined above */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -163,20 +164,20 @@
 }
 
 .sidebar ul li.active a {
-    background: var(--primary);
+    background: var(--primary); /* Uses global --primary */
     color: white;
     font-weight: 600;
 }
 
 /* Hover & Active States */
 .sidebar ul li a:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1); /* This is a specific transparent white, no direct var */
     color: white;
     transform: translateX(4px);
 }
 
 .sidebar ul li.active a {
-    background: var(--primary);
+    background: var(--primary); /* Uses global --primary */
     color: white;
     font-weight: 600;
 }
@@ -245,34 +246,40 @@
 /* Main content positioning */
 .main-content {
     margin-left: var(--sidebar-width);
-    padding: 0;
-    transition: all 0.3s ease;
-    min-height: 100vh;
     width: calc(100% - var(--sidebar-width));
+    padding: 2rem; /* Added from index.css for consistent page content padding */
+    min-height: 100vh; /* Added from index.css */
+    transition: margin-left 0.3s ease, width 0.3s ease; /* Specific transitions */
     box-sizing: border-box;
     position: relative;
     z-index: 1;
-    background-color: #f5f7fa;
+    background-color: var(--gray-100, #f5f7fa);
     display: flex;
     justify-content: center;
 }
 
-/* Content wrapper */
+/* Content wrapper - This provides an inner max-width and horizontal padding for content within .main-content */
 .content-wrapper {
     width: 100%;
-    max-width: 1600px;
-    margin: 0;
-    padding: 0 2rem;
+    max-width: 1600px; /* Example max-width for content area */
+    /* padding: 0 2rem; /* This padding can be removed if .container inside it handles padding */
+    /* Or, if .container is not always used, this provides default horizontal padding */
+    padding-left: 2rem; /* Default horizontal padding */
+    padding-right: 2rem; /* Default horizontal padding */
     box-sizing: border-box;
+    margin: 0 auto; /* Center the content wrapper if main-content is full bleed due to calc() */
 }
 
-/* Container adjustments */
+/* Container adjustments - This rule was making page content full-width.
+   Commenting it out to allow page-specific .container styles (e.g., from index.css) to take effect. */
+/*
 .container {
     padding: 0;
     margin: 0;
     width: 100%;
     max-width: 100%;
 }
+*/
 
 /* Ensure full width for sections */
 section {

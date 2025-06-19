@@ -103,41 +103,12 @@
 
 .form-control:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb, 78, 115, 223), 0.25); /* Use global var --primary-rgb */
     outline: none;
 }
 
 /* Buttons */
-.btn-agregar {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: var(--primary);
-    color: white;
-    padding: 0.625rem 1.25rem;
-    border: none;
-    border-radius: var(--radius);
-    text-decoration: none;
-    font-weight: 500;
-    transition: var(--transition);
-    margin-bottom: 1.5rem;
-}
-
-.btn-agregar:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow);
-}
-
-.btn-agregar:active {
-    transform: translateY(0);
-}
-
-.btn-agregar svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    stroke: currentColor;
-}
+/* .btn-agregar rule removed from here, will use global style from index.css */
 
 /* Table Container */
 .table-container {
@@ -283,114 +254,7 @@
     border-color: var(--danger-light);
 }
 
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
-
-.modal.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.modal-contenido {
-    background-color: white;
-    border-radius: var(--radius-lg);
-    width: 100%;
-    max-width: 640px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    transform: translateY(20px);
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--gray-200);
-}
-
-.modal.active .modal-contenido {
-    transform: translateY(0);
-}
-
-.modal-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--gray-200);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 10;
-}
-
-.modal-title {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--dark);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.modal-title svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    stroke: currentColor;
-    stroke-width: 2;
-}
-
-.cerrar {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--gray-500);
-    padding: 0.25rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition);
-    width: 2rem;
-    height: 2rem;
-}
-
-.cerrar:hover {
-    background: var(--gray-100);
-    color: var(--gray-700);
-}
-
-.modal-body {
-    padding: 1.5rem;
-}
-
-.modal-footer {
-    padding: 1.25rem 1.5rem;
-    border-top: 1px solid var(--gray-200);
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    background: var(--gray-50);
-    border-bottom-left-radius: var(--radius-lg);
-    border-bottom-right-radius: var(--radius-lg);
-    position: sticky;
-    bottom: 0;
-}
+/* Modal Styles removed from here. Will use global styles from index.css */
 
 /* Form Groups in Modal */
 .form-group-modal {
@@ -465,4 +329,43 @@
     .acciones-btn {
         display: none;
     }
+}
+
+/* Refinements for New Elements in Maintenance Modal */
+
+/* Ensure consistent spacing for all form groups in the modal, including new ones */
+#modalMantenimiento .form-group {
+    margin-bottom: 1.25rem; /* Matches form-group-modal if that was intended globally */
+}
+
+/* Styling for the H5 sub-heading above the file list */
+#archivos_adjuntos_list_container h5 {
+    font-size: 1rem;         /* Or match .page-title or other relevant titles if smaller */
+    font-weight: 600;        /* Common weight for sub-titles */
+    color: var(--gray-700);  /* Consistent with labels */
+    margin-bottom: 0.75rem;
+}
+
+/* Styling for file links within the list to ensure they are noticeable and consistent */
+#archivos_adjuntos_list .list-group-item a {
+    color: var(--primary, #007bff); /* Use CSS variable if --primary is defined, else a default blue */
+    text-decoration: none;
+    word-break: break-all; /* Prevent long filenames from breaking layout */
+}
+
+#archivos_adjuntos_list .list-group-item a:hover {
+    text-decoration: underline;
+    color: var(--primary-hover, #0056b3); /* Use CSS variable if --primary-hover is defined */
+}
+
+/* Specific tweaks for the small delete file button, if necessary */
+.btn-eliminar-archivo {
+    padding: 0.2rem 0.4rem; /* Slightly smaller padding for a very small button */
+    font-size: 0.875rem;    /* Adjust font size if needed */
+    line-height: 1.2;       /* Adjust line height for better vertical alignment of &times; */
+}
+
+/* Ensure the file input has some bottom margin if it's too close to the next element */
+#mantenimiento_archivos_input {
+    margin-bottom: 0.5rem; /* Or rely on the form-group's bottom margin */
 }
