@@ -466,3 +466,42 @@
         display: none;
     }
 }
+
+/* Refinements for New Elements in Maintenance Modal */
+
+/* Ensure consistent spacing for all form groups in the modal, including new ones */
+#modalMantenimiento .form-group {
+    margin-bottom: 1.25rem; /* Matches form-group-modal if that was intended globally */
+}
+
+/* Styling for the H5 sub-heading above the file list */
+#archivos_adjuntos_list_container h5 {
+    font-size: 1rem;         /* Or match .page-title or other relevant titles if smaller */
+    font-weight: 600;        /* Common weight for sub-titles */
+    color: var(--gray-700);  /* Consistent with labels */
+    margin-bottom: 0.75rem;
+}
+
+/* Styling for file links within the list to ensure they are noticeable and consistent */
+#archivos_adjuntos_list .list-group-item a {
+    color: var(--primary, #007bff); /* Use CSS variable if --primary is defined, else a default blue */
+    text-decoration: none;
+    word-break: break-all; /* Prevent long filenames from breaking layout */
+}
+
+#archivos_adjuntos_list .list-group-item a:hover {
+    text-decoration: underline;
+    color: var(--primary-hover, #0056b3); /* Use CSS variable if --primary-hover is defined */
+}
+
+/* Specific tweaks for the small delete file button, if necessary */
+.btn-eliminar-archivo {
+    padding: 0.2rem 0.4rem; /* Slightly smaller padding for a very small button */
+    font-size: 0.875rem;    /* Adjust font size if needed */
+    line-height: 1.2;       /* Adjust line height for better vertical alignment of &times; */
+}
+
+/* Ensure the file input has some bottom margin if it's too close to the next element */
+#mantenimiento_archivos_input {
+    margin-bottom: 0.5rem; /* Or rely on the form-group's bottom margin */
+}

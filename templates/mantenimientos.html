@@ -230,6 +230,24 @@
                 <label for="observaciones">Observaciones</label>
                 <textarea class="form-control" id="observaciones" name="observaciones" rows="2"></textarea>
             </div>
+
+            <div class="form-group">
+                <label for="trabajos_realizados_detalle">Trabajos Realizados (Detalle)</label>
+                <textarea class="form-control" id="trabajos_realizados_detalle" name="trabajos_realizados_detalle" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="mantenimiento_archivos_input">Adjuntar Archivos</label>
+                <input type="file" class="form-control-file" id="mantenimiento_archivos_input" name="mantenimiento_archivos_input[]" multiple>
+                <small class="form-text text-muted">Puede seleccionar múltiples archivos.</small>
+            </div>
+
+            <div id="archivos_adjuntos_list_container" class="mt-3" style="display: none;">
+                <h5>Archivos Adjuntos:</h5>
+                <ul id="archivos_adjuntos_list" class="list-group">
+                    <!-- Archivos se listarán aquí por JS -->
+                </ul>
+            </div>
             
             <div class="form-group">
                 <div class="form-check">
